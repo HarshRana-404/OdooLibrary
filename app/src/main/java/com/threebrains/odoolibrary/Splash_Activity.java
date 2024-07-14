@@ -27,7 +27,7 @@ public class Splash_Activity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               AuthUsers();
+                AuthUsers();
             }
         },3000);
     }

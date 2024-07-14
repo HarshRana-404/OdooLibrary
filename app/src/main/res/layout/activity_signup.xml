@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.Signup">
+    tools:context=".auth.Signup"
+    android:background="@color/lighter">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/lighter">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,7 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sign Up"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="32sp"
                     android:textStyle="bold" />
 
@@ -92,7 +94,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Sign Up"
-                    android:layout_marginTop="16dp" />
+                    android:textColor="@color/lighter"
+                    android:layout_marginTop="16dp"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"

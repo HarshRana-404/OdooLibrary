@@ -6,9 +6,9 @@
     tools:context=".fragments.LibrariansFragment"
     android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Librarians"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_librarians"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
