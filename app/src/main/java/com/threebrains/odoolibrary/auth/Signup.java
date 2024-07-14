@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -31,14 +32,14 @@ import java.util.Map;
 
 public class Signup extends AppCompatActivity {
 
-    private TextInputEditText etUsername, etEmail, etPassword,etConfirmPassword;
+    private TextInputEditText etUsername, etEmail, etPassword, etConfirmPassword;
     private AutoCompleteTextView etState;
     private Button btnSignUp;
     private TextView tvLogin;
     ProgressDialog SignuprogressDialog;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    TextInputLayout confirmPasswordLayout,PasswordLayout;
+    TextInputLayout confirmPasswordLayout, PasswordLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class Signup extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.et_confirm_password);
         btnSignUp = findViewById(R.id.btn_sign_up);
         tvLogin = findViewById(R.id.tv_login);
-        PasswordLayout =findViewById(R.id.et_password_layout);
+        PasswordLayout = findViewById(R.id.et_password_layout);
         confirmPasswordLayout = findViewById(R.id.et_confirm_password_layout);
         etPassword.addTextChangedListener(new TextWatcher() {
             @Override
@@ -100,9 +101,9 @@ public class Signup extends AppCompatActivity {
                 String username = etUsername.getText().toString().trim();
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
-                String  confirmPassword = etConfirmPassword.getText().toString().trim();
+                String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-                if (TextUtils.isEmpty(username)){
+                if (TextUtils.isEmpty(username)) {
                     etUsername.setError("Username is required");
                     etUsername.requestFocus();
                     return;
@@ -152,7 +153,7 @@ public class Signup extends AppCompatActivity {
                 }
 
 
-                registerUser(username, email, password,confirmPassword);
+                registerUser(username, email, password, confirmPassword);
             }
         });
 
@@ -192,6 +193,7 @@ public class Signup extends AppCompatActivity {
                     }
                 });
     }
+
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             // Navigate to main activity or dashboard
@@ -200,10 +202,11 @@ public class Signup extends AppCompatActivity {
         }
     }
 
-    public void hideTint(){
+    public void hideTint() {
         confirmPasswordLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
     }
-    public void hidePasswordTint(){
+
+    public void hidePasswordTint() {
         PasswordLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
     }
 }
