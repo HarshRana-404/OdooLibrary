@@ -7,9 +7,8 @@
     android:gravity="center"
     android:background="@color/lighter">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile"/>
+    <include layout="@layout/layout_profile"
+        android:id="@+id/profile"
+        />
 
 </LinearLayout>

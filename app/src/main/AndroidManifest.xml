@@ -37,15 +37,7 @@
         <activity
             android:name=".auth.Login"
             android:exported="false" />
-        <activity
-            android:name=".AdminActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LibrarianActivity"
-            android:exported="false" />
-        <activity
-        android:name=".UserActivity"
-        android:exported="false" />
+
     </application>
 
 </manifest>
