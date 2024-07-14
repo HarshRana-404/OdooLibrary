@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "711737160641",
+    "project_id": "odoolibrary",
+    "storage_bucket": "odoolibrary.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711737160641:android:c37855dc01fd6371f4b540",
+        "android_client_info": {
+          "package_name": "com.threebrains.odoolibrary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMOgae2M8M3YibY2tqKqZv2fHay5EGlTY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
