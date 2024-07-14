@@ -124,47 +124,47 @@ public class Login extends AppCompatActivity {
         try {
 
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            String uid = (Objects.requireNonNull(fAuth.getCurrentUser())).getUid();
-                            DocumentReference df = db.collection("users").document(uid);
-                            df.get().addOnSuccessListener(documentSnapshot -> {
-                                if (documentSnapshot.exists()) {
-                                    String role = documentSnapshot.getString("role");
-                                    Log.d("FirestoreData", "role: " + role);
-                                    if (role != null) {
-                                        switch (role) {
-                                            case "User":
-                                                startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                                                finish();
-                                                break;
-                                            case "Librarian":
-                                                startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
-                                                finish();
-                                                break;
-                                            case "Admin":
-                                                startActivity(new Intent(getApplicationContext(), AdminActivity.class));
-                                                finish();
-                                                break;
-                                            default:
-                                                Toast.makeText(this, "User type not recognized", Toast.LENGTH_SHORT).show();
-                                                mAuth.signOut();
-                                                startActivity(new Intent(getApplicationContext(), Login.class));
-                                                break;
-                                        }
-                                    }
-                                } else {
-                                    Log.d("FirestoreData", "No such document");
-                                    Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
-                                    FirebaseAuth.getInstance().signOut();
-                                    startActivity(new Intent(getApplicationContext(), Signup.class));
-                                    finish();
+                if (task.isSuccessful()) {
+                    String uid = (Objects.requireNonNull(fAuth.getCurrentUser())).getUid();
+                    DocumentReference df = db.collection("users").document(uid);
+                    df.get().addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String role = documentSnapshot.getString("role");
+                            Log.d("FirestoreData", "role: " + role);
+                            if (role != null) {
+                                switch (role) {
+                                    case "User":
+                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                        finish();
+                                        break;
+                                    case "Librarian":
+                                        startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
+                                        finish();
+                                        break;
+                                    case "Admin":
+                                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+                                        finish();
+                                        break;
+                                    default:
+                                        Toast.makeText(this, "User type not recognized", Toast.LENGTH_SHORT).show();
+                                        mAuth.signOut();
+                                        startActivity(new Intent(getApplicationContext(), Login.class));
+                                        break;
                                 }
-                            }).addOnFailureListener(e -> {
-                                Log.e("FirestoreError", "Error fetching document", e);
-                                FirebaseAuth.getInstance().signOut();
-                                startActivity(new Intent(getApplicationContext(), Login.class));
-                                finish();
-                            });
+                            }
+                        } else {
+                            Log.d("FirestoreData", "No such document");
+                            Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(getApplicationContext(), Signup.class));
+                            finish();
+                        }
+                    }).addOnFailureListener(e -> {
+                        Log.e("FirestoreError", "Error fetching document", e);
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(getApplicationContext(), Login.class));
+                        finish();
+                    });
                     //finish();
                     //finishing Activity from stack so that it will free up some memory.
                 }
@@ -184,6 +184,3 @@ public class Login extends AppCompatActivity {
     }
 
 }
-
-
-
