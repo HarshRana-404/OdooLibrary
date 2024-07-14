@@ -100,4 +100,3 @@ A comprehensive Library Management System that allows users to manage book inven
 
 ---
 
-Feel free to customize this `README.md` file according to your project specifics and preferences.
