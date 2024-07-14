@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,6 +32,7 @@ public class AddLibrarianActivity extends AppCompatActivity {
     private Button btnAddLibrarian;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class AddLibrarianActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+       user = mAuth.getCurrentUser();
         etUsername = findViewById(R.id.et_username);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -101,16 +104,15 @@ public class AddLibrarianActivity extends AppCompatActivity {
     }
 
     private void addLibrarianToFirestore(String username, String email) {
+
         Map<String, Object> librarian = new HashMap<>();
         librarian.put("username", username);
         librarian.put("email", email);
         librarian.put("role", "Librarian");
-
-        db.collection("users")
-                .add(librarian)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        db.collection("users").document(user.getUid())
+                .set(librarian).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if (task.isComplete()){
                             Toast.makeText(AddLibrarianActivity.this, "Librarian added", Toast.LENGTH_SHORT).show();
                         }
