@@ -86,7 +86,6 @@ A comprehensive Library Management System that allows users to manage book inven
 - **Java**
 - **Firebase Authentication**
 - **Firebase Firestore**
-- **Google Books API**
 - **Material Design Components**
 
 ## Demo
