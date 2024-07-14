@@ -2,8 +2,15 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.OdooLibrary" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryContainer">@color/primary_transparent</item>
+        <item name="colorSecondaryContainer">@color/primary_transparent</item>
     </style>
 
     <style name="Theme.OdooLibrary" parent="Base.Theme.OdooLibrary" />
+
+    <style name="RoundedImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">6dp</item>
+    </style>
 </resources>
