@@ -2,11 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="primary">#A24689</color>
     <color name="primary_transparent">#1AA24689</color>
 
-    <color name="bottom_navigation_bg">#F2F2F2</color>
-
+    <color name="red">#B00020</color>
+    <color name="green">#00C853</color>
 
     <color name="lighter">#EFEFEF</color>
     <color name="light">#CDCDCD</color>
