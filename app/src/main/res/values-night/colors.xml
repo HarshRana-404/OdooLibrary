@@ -5,6 +5,7 @@
     <color name="primary">#A24689</color>
     <color name="primary_transparent">#1AA24689</color>
 
+    <color name="bottom_navigation_bg">#2d2d2d</color>
 
     <color name="lighter">#232323</color>
     <color name="light">#343434</color>

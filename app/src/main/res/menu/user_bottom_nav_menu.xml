@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/mi_user_books"
+        android:title="Books"
+        android:icon="@drawable/ic_books" />
+    <item android:id="@+id/mi_user_history"
+        android:title="History"
+        android:icon="@drawable/ic_history"/>
+    <item android:id="@+id/mi_user_profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_account"/>
+</menu>
