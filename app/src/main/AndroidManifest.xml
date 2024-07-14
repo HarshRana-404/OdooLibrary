@@ -21,14 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserActivity"
-            android:exported="false" />
-        <activity android:name=".LibrarianActivity"
-            android:exported="false" />
-        <activity android:name=".AdminActivity"
-            android:exported="false" />
-        <activity android:name=".AddLibrarianActivity"
-            android:exported="false" />
         <activity
             android:name=".auth.Signup"
             android:exported="false" />

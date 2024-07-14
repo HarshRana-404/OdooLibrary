@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,23 +17,15 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.threebrains.odoolibrary.AdminActivity;
-import com.threebrains.odoolibrary.LibrarianActivity;
 import com.threebrains.odoolibrary.Splash_Activity;
 import com.threebrains.odoolibrary.R;
-import com.threebrains.odoolibrary.UserActivity;
-
-import java.util.Objects;
 
 public class Login extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;
     private Button btnLogin;
     private TextView tvSignup;
-    FirebaseAuth fAuth;
-    FirebaseFirestore db;
+
     private FirebaseAuth mAuth;
     ProgressDialog MprogressDialog;
     TextInputLayout PasswordLayout;
@@ -43,15 +34,16 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         mAuth = FirebaseAuth.getInstance();
+
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
-        btnLogin = findViewById(R.id.btn_login);
+        btnLogin  = findViewById(R.id.btn_login);
         tvSignup = findViewById(R.id.tv_CreateAc);
-        PasswordLayout = findViewById(R.id.tl_password);
-        fAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        //AuthUsers();
+        PasswordLayout  =findViewById(R.id.tl_password);
+
+        CheckAuth();
         MprogressDialog = new ProgressDialog(this);
         MprogressDialog.setCancelable(false);
         MprogressDialog.setTitle("Login");
@@ -105,11 +97,11 @@ public class Login extends AppCompatActivity {
                 }
 
                 loginUser(email, password);
-                MprogressDialog.show();
 
 
             }
         });
+
 
 
         tvSignup.setOnClickListener(new View.OnClickListener() {
@@ -119,68 +111,41 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-
     private void loginUser(String email, String password) {
         try {
-
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    String uid = (Objects.requireNonNull(fAuth.getCurrentUser())).getUid();
-                    DocumentReference df = db.collection("users").document(uid);
-                    df.get().addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            String role = documentSnapshot.getString("role");
-                            Log.d("FirestoreData", "role: " + role);
-                            if (role != null) {
-                                switch (role) {
-                                    case "User":
-                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                                        finish();
-                                        break;
-                                    case "Librarian":
-                                        startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
-                                        finish();
-                                        break;
-                                    case "Admin":
-                                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
-                                        finish();
-                                        break;
-                                    default:
-                                        Toast.makeText(this, "User type not recognized", Toast.LENGTH_SHORT).show();
-                                        mAuth.signOut();
-                                        startActivity(new Intent(getApplicationContext(), Login.class));
-                                        break;
-                                }
-                            }
-                        } else {
-                            Log.d("FirestoreData", "No such document");
-                            Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
-                            FirebaseAuth.getInstance().signOut();
-                            startActivity(new Intent(getApplicationContext(), Signup.class));
-                            finish();
-                        }
-                    }).addOnFailureListener(e -> {
-                        Log.e("FirestoreError", "Error fetching document", e);
-                        FirebaseAuth.getInstance().signOut();
-                        startActivity(new Intent(getApplicationContext(), Login.class));
-                        finish();
-                    });
-                    //finish();
+            MprogressDialog.show();
+            mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    startActivity(new Intent(getApplicationContext(), Splash_Activity.class)); //changing to  home activity.
+                    finish();
                     //finishing Activity from stack so that it will free up some memory.
                 }
             }).addOnFailureListener(e -> {
                 MprogressDialog.dismiss();
                 //Telling user that  login Failed..
-                Toast.makeText(Login.this, "Login Failed:" + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Login Failed:"+ e, Toast.LENGTH_SHORT).show();
             });
         } catch (Exception e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void CheckAuth() {
+//        if (mAuth.getCurrentUser()==null){
+//            startActivity(new Intent(getApplicationContext(), Login.class));
+//            finish();
+//        }
+        if (mAuth.getCurrentUser() !=null){
+          //TODO Login to home
+              startActivity(new Intent(getApplicationContext(), Splash_Activity.class));
+            finish();
+        }
 
-    public void hidePasswordTint() {
+    }
+    public void hidePasswordTint(){
         PasswordLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
     }
-
 }
+
+
+

@@ -152,6 +152,7 @@ public class Signup extends AppCompatActivity {
                 }
 
 
+
                 registerUser(username, email, password,confirmPassword);
             }
         });
@@ -176,7 +177,7 @@ public class Signup extends AppCompatActivity {
                             Map<String, Object> userDetails = new HashMap<>();
                             userDetails.put("username", username);
                             userDetails.put("email", email);
-                            userDetails.put("role", "User");
+                            userDetails.put("role","User");
                             db.collection("users").document(user.getUid())
                                     .set(userDetails)
                                     .addOnSuccessListener(aVoid -> {
@@ -195,7 +196,7 @@ public class Signup extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             // Navigate to main activity or dashboard
-            startActivity(new Intent(getApplicationContext(), Login.class));
+
             finish();
         }
     }
