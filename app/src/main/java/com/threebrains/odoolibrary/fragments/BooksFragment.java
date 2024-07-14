@@ -1,9 +1,13 @@
 package com.threebrains.odoolibrary.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +16,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.threebrains.odoolibrary.AddBookActivity;
 import com.threebrains.odoolibrary.R;
+import com.threebrains.odoolibrary.adapters.BookAdapter;
 import com.threebrains.odoolibrary.models.BookModel;
 import com.threebrains.odoolibrary.models.RequestedModel;
 
@@ -28,10 +35,13 @@ import java.util.Locale;
 
 public class BooksFragment extends Fragment {
 
+    RecyclerView rvBooks;
+    BookAdapter bookAdapter;
+    FloatingActionButton fabAddBook;
+
     FirebaseFirestore fbStore;
-    HashMap<String, String> hmBook = new HashMap<>();
     HashMap<String, String> hmRequests = new HashMap<>();
-    ArrayList<BookModel> alBook = new ArrayList<>();
+    ArrayList<BookModel> alBook;
     ArrayList<RequestedModel> alRequests = new ArrayList<>();
 
     @Override
@@ -39,23 +49,37 @@ public class BooksFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View fragBooks = inflater.inflate(R.layout.fragment_books, container, false);
 
+        rvBooks = fragBooks.findViewById(R.id.rv_books);
+        fabAddBook = fragBooks.findViewById(R.id.fab_add_book);
+
         try {
             fbStore = FirebaseFirestore.getInstance();
-//            addNewBook("ISBN_1","Programming in Java","Java's most preferred book","Author-1","Publisher-1","2018","Learning",5,0,"2024-07-14");
-//            getAllBooks();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             String currentDate = sdf.format(Calendar.getInstance().getTime());
             Calendar calDue = Calendar.getInstance();
             calDue.add(Calendar.DATE, 15);
             String dueDate = sdf.format(calDue.getTime());
 
-//            requestBook("ISBN_1", "Title", "uid1", "uname", "2024-07-14", "2024-07-15", "2024-07-30", "2024-07-30","pending");
-//            getAllRequests();
+            rvBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
+            alBook = new ArrayList<>();
+            bookAdapter = new BookAdapter(requireContext(), alBook);
+            rvBooks.setAdapter(bookAdapter);
+
+            getAllBooks();
+
+            fabAddBook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(requireContext(), AddBookActivity.class));
+                }
+            });
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -95,20 +119,6 @@ public class BooksFragment extends Fragment {
         }
     }
 
-    public void addNewBook(String isbn, String title, String description, String author, String publisher, String year, String genre, int quantity, int issueCount, String dateAdded){
-        hmBook.put("isbn", isbn);
-        hmBook.put("title", title);
-        hmBook.put("description", description);
-        hmBook.put("author", author);
-        hmBook.put("publisher", publisher);
-        hmBook.put("year", year);
-        hmBook.put("genre", genre);
-        hmBook.put("quantity", String.valueOf(quantity));
-        hmBook.put("issuecount", String.valueOf(issueCount));
-        hmBook.put("dateadded", dateAdded);
-        fbStore.collection("books").document().set(hmBook);
-    }
-
     public void getAllBooks(){
         try{
             Task<QuerySnapshot> qs = fbStore.collection("books").get();
@@ -120,6 +130,7 @@ public class BooksFragment extends Fragment {
                         for(DocumentSnapshot book : books){
                             alBook.add(new BookModel(book.getString("isbn"), book.getString("title"), book.getString("description"), book.getString("author"), book.getString("publisher"), book.getString("year"), book.getString("genre"), Integer.parseInt(book.getString("quantity")), Integer.parseInt(book.getString("issuecount")), book.getString("dateadded")));
                         }
+                        bookAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                     }
                 }

@@ -19,7 +19,7 @@
             android:id="@+id/siv_book_img"
             android:layout_width="120dp"
             android:layout_height="180dp"
-            android:src="@drawable/ic_launcher_background"
+            android:src="@drawable/book"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/RoundedImage" />
 

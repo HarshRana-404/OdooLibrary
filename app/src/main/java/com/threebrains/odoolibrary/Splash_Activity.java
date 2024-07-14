@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.threebrains.odoolibrary.auth.Login;
+import com.threebrains.odoolibrary.auth.Signup;
 
 public class Splash_Activity extends AppCompatActivity {
     FirebaseAuth fAuth;
@@ -26,8 +27,7 @@ public class Splash_Activity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               AuthUsers();
-                finish();
+                AuthUsers();
             }
         },3000);
     }
@@ -40,35 +40,31 @@ public class Splash_Activity extends AppCompatActivity {
         } else {
             String uid = (fAuth.getCurrentUser()).getUid();
             DocumentReference df = db.collection("users").document(uid);
-
             df.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
                     String role = documentSnapshot.getString("role");
-
                     Log.d("FirestoreData", "role: " + role);
-
                     assert role != null;
                     if (role.equals("User")) {
-                      //  startActivity(new Intent(getApplicationContext(), admin_activity.class));
+                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
                         finish();
                     } else if (role.equals("Librarian")) {
-                       // startActivity(new Intent(getApplicationContext(), home.class));
-
+                        startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
                         finish();
                     }else if (role.equals("Admin")){
-
+                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+                        finish();
                     }
                     else {
                         Toast.makeText(this, "User type not recognized", Toast.LENGTH_SHORT).show();
                         FirebaseAuth.getInstance().signOut();
-                        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        finish();
+
                     }
                 } else {
                     Log.d("FirestoreData", "No such document");
                     Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
                     FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(getApplicationContext(), Login.class));
+                    startActivity(new Intent(getApplicationContext(), Signup.class));
                     finish();
                 }
             }).addOnFailureListener(e -> {
