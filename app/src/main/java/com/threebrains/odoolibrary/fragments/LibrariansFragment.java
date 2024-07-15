@@ -46,7 +46,7 @@ public class LibrariansFragment extends Fragment {
             fbStore = FirebaseFirestore.getInstance();
 //            rvIssued = fragIssued.findViewById(R.id.rv_issued);
             rvIssued.setLayoutManager(new LinearLayoutManager(requireContext()));
-            issuedAdapter = new IssuedAdapter(requireContext(), alIssued);
+//            issuedAdapter = new IssuedAdapter(requireContext(), );
             rvIssued.setAdapter(issuedAdapter);
 //            getIssued();
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class LibrariansFragment extends Fragment {
                     try{
                         List<DocumentSnapshot> books = task.getResult().getDocuments();
                         for(DocumentSnapshot book : books){
-                            alIssued.add(new RequestedModel(book.getString("isbn"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
+//                            alIssued.add(new RequestedModel(book.getString("isbn"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
                         }
                         issuedAdapter.notifyDataSetChanged();
                     } catch (Exception e) {

@@ -25,9 +25,6 @@ import java.util.Locale;
 
 public class AddBookActivity extends AppCompatActivity {
 
-//    EditText etBookISBN, etBookTitle, etBookDescription, etBookAuthor, etBookPublisher, etBookGenre, etBookYear, etBookQuantity;
-//    Button btnAddBook;
-
     String isbn, title, desc, author, publisher, genre, year, qty;
     String currentDate = "";
 
@@ -40,11 +37,6 @@ public class AddBookActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityAddBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         fbStore = FirebaseFirestore.getInstance();
 
@@ -58,13 +50,13 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isbn = binding.etBookIsbn.getText().toString().trim();
-                title = binding.etBookIsbn.getText().toString().trim();
-                desc = binding.etBookIsbn.getText().toString().trim();
-                author = binding.etBookIsbn.getText().toString().trim();
-                publisher = binding.etBookIsbn.getText().toString().trim();
-                genre = binding.etBookIsbn.getText().toString().trim();
-                year = binding.etBookIsbn.getText().toString().trim();
-                qty = binding.etBookIsbn.getText().toString().trim();
+                title = binding.etBookTitle.getText().toString().trim();
+                desc = binding.etBookDesc.getText().toString().trim();
+                author = binding.etBookAuthor.getText().toString().trim();
+                publisher = binding.etBookPublisher.getText().toString().trim();
+                genre = binding.etBookGenre.getText().toString().trim();
+                year = binding.etBookYear.getText().toString().trim();
+                qty = binding.etBookQuantity.getText().toString().trim();
 
                 addNewBook();
             }
@@ -88,6 +80,7 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
+                    Toast.makeText(AddBookActivity.this, "Book added successfully!", Toast.LENGTH_SHORT).show();
                     onBackPressed();
                 }else {
                     Toast.makeText(AddBookActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

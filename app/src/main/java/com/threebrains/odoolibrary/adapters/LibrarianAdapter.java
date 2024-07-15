@@ -45,7 +45,7 @@ public class LibrarianAdapter extends RecyclerView.Adapter<LibrarianAdapter.Issu
 
     @Override
     public int getItemCount() {
-        return alIssued.size();
+        return alLibrarian.size();
     }
 
     public class IssuedViewHolder extends RecyclerView.ViewHolder {

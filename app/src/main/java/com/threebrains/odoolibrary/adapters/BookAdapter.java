@@ -2,6 +2,7 @@ package com.threebrains.odoolibrary.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,20 +31,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     Context context;
     ArrayList<BookModel> alBooks;
 
-    FirebaseFirestore fbStore;
-    String currentDate = "", dueDate = "";
-
     public BookAdapter(Context context, ArrayList<BookModel> alBooks) {
         this.context = context;
         this.alBooks = alBooks;
-
-        fbStore = FirebaseFirestore.getInstance();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        currentDate = sdf.format(Calendar.getInstance().getTime());
-        Calendar calDue = Calendar.getInstance();
-        calDue.add(Calendar.DATE, 15);
-        dueDate = sdf.format(calDue.getTime());
     }
 
     @NonNull
@@ -63,21 +53,30 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         holder.tvBookYear.setText(book.getYear());
         holder.tvBookPublisher.setText(book.getPublisher());
         holder.tvBookGenre.setText(book.getGenre());
-        holder.tvBookQuantity.setText(String.valueOf(book.getQuantity() + "Available"));
+
+        if (book.getQuantity() == 0){
+            holder.tvBookQuantity.setText(String.valueOf("Not Available"));
+            holder.tvBookQuantity.setTextColor(context.getResources().getColor(R.color.red));
+        }else {
+            holder.tvBookQuantity.setText(String.valueOf(book.getQuantity() + " Available"));
+            holder.tvBookQuantity.setTextColor(context.getResources().getColor(R.color.green));
+        }
         holder.tvBookDescription.setText(book.getDescription());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.setTitle("Request book");
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Request", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        requestBook(book);
-                    }
-                });
+                Intent intent = new Intent(context, BookDetailsActivity.class);
+                intent.putExtra("bookIsbn", book.getIsbn());
+                intent.putExtra("bookTitle", book.getTitle());
+                intent.putExtra("bookDescription", book.getDescription());
+                intent.putExtra("bookAuthor", book.getAuthor());
+                intent.putExtra("bookYear", book.getYear());
+                intent.putExtra("bookPublisher", book.getPublisher());
+                intent.putExtra("bookGenre", book.getGenre());
+                intent.putExtra("bookQuantity", book.getQuantity());
+
+                context.startActivity(intent);
             }
         });
     }
@@ -85,22 +84,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return alBooks.size();
-    }
-
-    public void requestBook(BookModel book){
-        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
-
-        HashMap<String, String> hmRequests = new HashMap<>();
-        hmRequests.put("isbn", book.getIsbn());
-        hmRequests.put("title", book.getTitle());
-        hmRequests.put("uid", Constants.UID);
-        hmRequests.put("username", email);
-        hmRequests.put("requestdate", currentDate);
-        hmRequests.put("issuedate", "-");
-        hmRequests.put("duedate", dueDate);
-        hmRequests.put("returndate", "-");
-        hmRequests.put("status", "pending");
-        fbStore.collection("requested").document().set(hmRequests);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
