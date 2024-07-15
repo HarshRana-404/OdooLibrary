@@ -70,9 +70,9 @@ public class ProfileFragment extends Fragment {
                 });
                 adb.show();
 
-
             }
         });
+
         return fragProfile;
     }
 

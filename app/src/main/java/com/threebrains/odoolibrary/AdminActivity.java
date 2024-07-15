@@ -56,6 +56,7 @@ public class AdminActivity extends AppCompatActivity {
                 }else if(item.getItemId()==R.id.mi_admin_profile && lastNavigatedMenuItem!=item){
                     setFragment(new ProfileFragment());
                     lastNavigatedMenuItem = item;
+
                 }
                 return true;
             }

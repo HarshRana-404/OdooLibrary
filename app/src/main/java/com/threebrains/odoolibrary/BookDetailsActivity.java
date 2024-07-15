@@ -3,6 +3,7 @@ package com.threebrains.odoolibrary;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.threebrains.odoolibrary.auth.Login;
 import com.threebrains.odoolibrary.models.BookModel;
 import com.threebrains.odoolibrary.utilities.Constants;
 
@@ -46,7 +48,6 @@ public class BookDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_book_details);
 
         sivBookImage = findViewById(R.id.siv_book_img);
@@ -73,33 +74,30 @@ public class BookDetailsActivity extends AppCompatActivity {
         btnRequestBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                AlertDialog alertDialog = builder.create();
-                alertDialog.setTitle(title);
-                alertDialog.setMessage("Are you sure you want to issue this book?");
 
-                builder.setPositiveButton("Request Book", new DialogInterface.OnClickListener() {
+                AlertDialog.Builder adb = new AlertDialog.Builder(BookDetailsActivity.this);
+                AlertDialog ad = adb.create();
+                adb.setTitle(title);
+                adb.setMessage("Are you sure you want to issue this book?");
+                adb.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(DialogInterface dialog, int which) {
                         requestBook(isbn, title);
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                adb.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();
+                    public void onClick(DialogInterface dialog, int which) {
+                        ad.dismiss();
                     }
                 });
+                adb.show();
 
-                alertDialog.show();
             }
         });
     }
 
     public void requestBook(String isbn, String title){
-
-        Toast.makeText(this, username, Toast.LENGTH_SHORT).show();
-
         HashMap<String, String> hmRequests = new HashMap<>();
         hmRequests.put("isbn", isbn);
         hmRequests.put("title", title);
@@ -115,6 +113,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     Toast.makeText(BookDetailsActivity.this, "Book requested successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         });
@@ -126,7 +125,6 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
-
                     username = document.getString("username");
                 }else {
                     Toast.makeText(BookDetailsActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

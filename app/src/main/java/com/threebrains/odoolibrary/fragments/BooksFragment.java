@@ -123,6 +123,7 @@ public class BooksFragment extends Fragment {
         try{
             Task<QuerySnapshot> qs = fbStore.collection("books").get();
                 qs.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     try{
