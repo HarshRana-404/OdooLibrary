@@ -37,8 +37,6 @@ public class UserActivity extends AppCompatActivity {
         bnvUser = findViewById(R.id.bnv_user);
         flUser = findViewById(R.id.fl_user);
 
-        setFragment(new BooksFragment());
-
         bnvUser.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -56,6 +54,14 @@ public class UserActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setFragment(new BooksFragment());
+        bnvUser.setSelectedItemId(R.id.mi_user_books);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.librarian_bottom_nav_menu, menu);

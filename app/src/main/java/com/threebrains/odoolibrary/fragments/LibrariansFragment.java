@@ -1,6 +1,7 @@
 package com.threebrains.odoolibrary.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,11 +15,14 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.threebrains.odoolibrary.AddLibrarianActivity;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.adapters.IssuedAdapter;
+import com.threebrains.odoolibrary.adapters.LibrarianAdapter;
 import com.threebrains.odoolibrary.models.RequestedModel;
 import com.threebrains.odoolibrary.models.UserModel;
 
@@ -27,10 +31,11 @@ import java.util.List;
 
 public class LibrariansFragment extends Fragment {
 
-    RecyclerView rvIssued;
-    IssuedAdapter issuedAdapter;
-    ArrayList<UserModel> alIssued = new ArrayList<>();
+    RecyclerView rvLibrarian;
+    LibrarianAdapter librarianAdapter;
+    ArrayList<UserModel> alLibrarian = new ArrayList<>();
     FirebaseFirestore fbStore;
+    FloatingActionButton fabAddLibrarian;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,29 +49,35 @@ public class LibrariansFragment extends Fragment {
 
         try{
             fbStore = FirebaseFirestore.getInstance();
-//            rvIssued = fragIssued.findViewById(R.id.rv_issued);
-            rvIssued.setLayoutManager(new LinearLayoutManager(requireContext()));
-            issuedAdapter = new IssuedAdapter(requireContext(), alIssued);
-            rvIssued.setAdapter(issuedAdapter);
-//            getIssued();
+            rvLibrarian = fragLibrarians.findViewById(R.id.rv_librarians);
+            fabAddLibrarian = fragLibrarians.findViewById(R.id.fab_add_librarian);
+            rvLibrarian.setLayoutManager(new LinearLayoutManager(requireContext()));
+            librarianAdapter = new LibrarianAdapter(requireContext(), alLibrarian);
+            rvLibrarian.setAdapter(librarianAdapter);
+            getLibrarians();
+            fabAddLibrarian.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(requireContext(), AddLibrarianActivity.class));
+                }
+            });
         } catch (Exception e) {
         }
-
         return fragLibrarians;
     }
     public void getLibrarians(){
         try{
-            Task<QuerySnapshot> qs = fbStore.collection("requested").whereEqualTo("role", "Librarian").get();
+            Task<QuerySnapshot> qs = fbStore.collection("users").whereEqualTo("role", "Librarian").get();
             qs.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     try{
-                        List<DocumentSnapshot> books = task.getResult().getDocuments();
-                        for(DocumentSnapshot book : books){
-                            alIssued.add(new RequestedModel(book.getString("isbn"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
+                        List<DocumentSnapshot> librarians = task.getResult().getDocuments();
+                        for(DocumentSnapshot librarian : librarians){
+                            alLibrarian.add(new UserModel(librarian.getString("email"), librarian.getString("role"), librarian.getString("username")));
                         }
-                        issuedAdapter.notifyDataSetChanged();
+                        librarianAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                     }
                 }

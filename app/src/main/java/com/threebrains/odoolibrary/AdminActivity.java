@@ -38,8 +38,6 @@ public class AdminActivity extends AppCompatActivity {
         bnvAdmin = findViewById(R.id.bnv_admin);
         flAdmin = findViewById(R.id.fl_admin);
 
-        setFragment(new DashboardFragment());
-
         bnvAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -64,6 +62,14 @@ public class AdminActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setFragment(new DashboardFragment());
+        bnvAdmin.setSelectedItemId(R.id.mi_admin_dashboard);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.admin_bottom_nav_menu, menu);

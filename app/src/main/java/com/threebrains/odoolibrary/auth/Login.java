@@ -22,7 +22,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.threebrains.odoolibrary.AdminActivity;
 import com.threebrains.odoolibrary.LibrarianActivity;
-import com.threebrains.odoolibrary.Splash_Activity;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.UserActivity;
 
@@ -51,7 +50,8 @@ public class Login extends AppCompatActivity {
         PasswordLayout = findViewById(R.id.tl_password);
         fAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        //AuthUsers();
+        AuthUsers();
+        getWindow().setNavigationBarColor(getColor(R.color.lighter));
         MprogressDialog = new ProgressDialog(this);
         MprogressDialog.setCancelable(false);
         MprogressDialog.setTitle("Login");
@@ -175,6 +175,48 @@ public class Login extends AppCompatActivity {
             });
         } catch (Exception e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void AuthUsers() {
+
+        if (fAuth.getCurrentUser() != null) {
+            String uid = (fAuth.getCurrentUser()).getUid();
+            DocumentReference df = db.collection("users").document(uid);
+            df.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String role = documentSnapshot.getString("role");
+                    Log.d("FirestoreData", "role: " + role);
+                    assert role != null;
+                    if (role.equals("User")) {
+                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                        finish();
+                    } else if (role.equals("Librarian")) {
+                        startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
+                        finish();
+                    }else if (role.equals("Admin")){
+                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+                        finish();
+                    }
+                    else {
+                        Toast.makeText(this, "User type not recognized", Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+
+                    }
+                } else {
+                    Log.d("FirestoreData", "No such document");
+                    Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(getApplicationContext(), Signup.class));
+                    finish();
+                }
+            }).addOnFailureListener(e -> {
+                Log.e("FirestoreError", "Error fetching document", e);
+                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+                finish();
+            });
         }
     }
 

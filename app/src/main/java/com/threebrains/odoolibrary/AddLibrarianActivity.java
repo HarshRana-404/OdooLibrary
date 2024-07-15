@@ -1,5 +1,6 @@
 package com.threebrains.odoolibrary;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,38 +30,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddLibrarianActivity extends AppCompatActivity {
-    private TextInputEditText etUsername, etEmail, etPassword, etConfirmPassword;
-    private Button btnAddLibrarian;
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
+    TextInputEditText etUsername, etEmail, etPassword, etConfirmPassword;
+    Button btnAddLibrarian;
+    FirebaseFirestore db;
+    FirebaseAuth mAuth;
     FirebaseUser user;
+    String username, email, password, confirmPassword;
+    Map<String, Object> librarian = new HashMap<>();
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_librarian);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-       user = mAuth.getCurrentUser();
-        etUsername = findViewById(R.id.et_username);
-        etEmail = findViewById(R.id.et_email);
-        etPassword = findViewById(R.id.et_password);
-        etConfirmPassword = findViewById(R.id.et_confirm_password);
-        btnAddLibrarian = findViewById(R.id.btn_sign_up);
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+
+        try{
+            etUsername = findViewById(R.id.et_librarian_username);
+            etEmail = findViewById(R.id.et_librarian_email);
+            etPassword = findViewById(R.id.et_librarian_password);
+            etConfirmPassword = findViewById(R.id.et_librarian_confirm_password);
+            btnAddLibrarian = findViewById(R.id.btn_add_librarian);
+            db = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+            user = mAuth.getCurrentUser();
+        } catch (Exception e) {
+            Toast.makeText(this, e+"", Toast.LENGTH_SHORT).show();
+        }
 
         btnAddLibrarian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = etUsername.getText().toString().trim();
-                String email = etEmail.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
-                String confirmPassword = etConfirmPassword.getText().toString().trim();
+                username = etUsername.getText().toString().trim();
+                email = etEmail.getText().toString().trim();
+                password = etPassword.getText().toString().trim();
+                confirmPassword = etConfirmPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(username)) {
                     etUsername.setError("Name is required.");
@@ -104,24 +108,27 @@ public class AddLibrarianActivity extends AppCompatActivity {
     }
 
     private void addLibrarianToFirestore(String username, String email) {
-
-        Map<String, Object> librarian = new HashMap<>();
         librarian.put("username", username);
         librarian.put("email", email);
         librarian.put("role", "Librarian");
-        db.collection("users").document(user.getUid())
+        db.collection("users").document()
                 .set(librarian).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isComplete()){
-                            Toast.makeText(AddLibrarianActivity.this, "Librarian added", Toast.LENGTH_SHORT).show();
+                        if (task.isComplete()) {
+                            FirebaseAuth createUserAuth = FirebaseAuth.getInstance();
+                            createUserAuth.createUserWithEmailAndPassword(email, password);
+                            createUserAuth.signOut();
+                            Toast.makeText(AddLibrarianActivity.this, "Librarian added!", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddLibrarianActivity.this, "Error adding librarian: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddLibrarianActivity.this, "Cannot add librarian!", Toast.LENGTH_SHORT).show();
+                        finish();
                         Log.w("AddLibrarianActivity", "Error adding document", e);
                     }
                 });

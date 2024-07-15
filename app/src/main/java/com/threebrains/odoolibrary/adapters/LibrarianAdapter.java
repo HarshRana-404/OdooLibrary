@@ -29,7 +29,7 @@ public class LibrarianAdapter extends RecyclerView.Adapter<LibrarianAdapter.Issu
     @NonNull
     @Override
     public LibrarianAdapter.IssuedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_issued_layout, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_librarian_layout, parent, false);
         return new IssuedViewHolder(view);
     }
 
@@ -39,13 +39,13 @@ public class LibrarianAdapter extends RecyclerView.Adapter<LibrarianAdapter.Issu
             holder.tvLibrarianName.setText(alLibrarian.get(position).getUsername());
             holder.tvLibrarianEmail.setText(alLibrarian.get(position).getEmail());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+
         }
     }
 
     @Override
     public int getItemCount() {
-        return alIssued.size();
+        return alLibrarian.size();
     }
 
     public class IssuedViewHolder extends RecyclerView.ViewHolder {
@@ -54,7 +54,7 @@ public class LibrarianAdapter extends RecyclerView.Adapter<LibrarianAdapter.Issu
         public IssuedViewHolder(@NonNull View itemView) {
             super(itemView);
             tvLibrarianName = itemView.findViewById(R.id.tv_librarian_name);
-            tvLibrarianEmail = itemView.findViewById(R.id.tv_librarian_name);
+            tvLibrarianEmail = itemView.findViewById(R.id.tv_librarian_email);
         }
     }
 }
