@@ -1,5 +1,8 @@
 package com.threebrains.odoolibrary.fragments;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -47,8 +50,27 @@ public class ProfileFragment extends Fragment {
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseAuth.signOut();
-                startActivity(new Intent(getActivity(), Login.class));
+
+                AlertDialog.Builder adb = new AlertDialog.Builder(requireContext());
+                AlertDialog ad = adb.create();
+                adb.setTitle("Logout?");
+                adb.setMessage("Are you sure you want to logout?");
+                adb.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        firebaseAuth.signOut();
+                        startActivity(new Intent(getActivity(), Login.class));
+                    }
+                });
+                adb.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ad.dismiss();
+                    }
+                });
+                adb.show();
+
+
             }
         });
 
