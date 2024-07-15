@@ -34,7 +34,6 @@ public class AddBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         binding = ActivityAddBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

@@ -12,7 +12,7 @@
         android:id="@+id/fl_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/fl_user"/>
+        android:layout_above="@id/bnv_user"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv_user"

@@ -29,6 +29,10 @@
             android:exported="false" />
         <activity android:name=".UserActivity"
             android:exported="false" />
+        <activity android:name=".AddBookActivity"
+            android:exported="false" />
+        <activity android:name=".BookDetailsActivity"
+            android:exported="false" />
         <activity android:name=".LibrarianActivity"
             android:exported="false" />
         <activity android:name=".AdminActivity"
