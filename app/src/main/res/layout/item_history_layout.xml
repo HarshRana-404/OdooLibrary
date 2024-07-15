@@ -3,116 +3,89 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
     app:cardElevation="2dp"
     app:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="120dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerVertical="true">
-
-                <TextView
-                    android:id="@+id/tv_book_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Book Title"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Request Date"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_request_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="06/04/2024"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/siv_book_img"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginEnd="32dp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_launcher_background"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/RoundedImage" />
-
-        </RelativeLayout>
+        android:padding="16dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/tv_book_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:text="Book Title"
+                android:textStyle="bold"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Issued Date:"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_issued_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="06/04/2024"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_marginTop="8dp"
+                android:text="Request Date:"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Return Date:"
-                    android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_request_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="06/04/2024"
+                android:textStyle="bold"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_return_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="06/04/2024"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
 
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Issued Date:"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_issued_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="06/04/2024"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_due_return"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Return Date:"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_due_return_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="06/04/2024"
+                android:textStyle="bold"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
-    </LinearLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_book_img"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_launcher_background"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
