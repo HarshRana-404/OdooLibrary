@@ -49,6 +49,8 @@ public class Signup extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        getWindow().setNavigationBarColor(getColor(R.color.lighter));
+
         etUsername = findViewById(R.id.et_username);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -57,39 +59,6 @@ public class Signup extends AppCompatActivity {
         tvLogin = findViewById(R.id.tv_login);
         PasswordLayout = findViewById(R.id.et_password_layout);
         confirmPasswordLayout = findViewById(R.id.et_confirm_password_layout);
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                PasswordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        etConfirmPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                confirmPasswordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         SignuprogressDialog = new ProgressDialog(this);
         SignuprogressDialog.setCancelable(false);
         SignuprogressDialog.setTitle("Sign up");
@@ -183,6 +152,7 @@ public class Signup extends AppCompatActivity {
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(Signup.this, "Registration successful.", Toast.LENGTH_SHORT).show();
                                         updateUI(user);
+                                        finish();
                                     })
                                     .addOnFailureListener(e ->
                                             Toast.makeText(Signup.this, "Failed to save user details.", Toast.LENGTH_SHORT).show());

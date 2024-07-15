@@ -123,7 +123,7 @@
                         android:clickable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:text="Login"
-                        android:textColor="@color/black"
+                        android:textColor="@color/primary"
                         android:textStyle="normal"
                         android:textSize="16sp" />
 

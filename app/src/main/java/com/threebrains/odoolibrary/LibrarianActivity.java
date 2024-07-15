@@ -38,7 +38,6 @@ public class LibrarianActivity extends AppCompatActivity {
         bnvLibrarian = findViewById(R.id.bnv_librarian);
         flLibrarian = findViewById(R.id.fl_librarian);
 
-        setFragment(new DashboardFragment());
 
         bnvLibrarian.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -64,6 +63,14 @@ public class LibrarianActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setFragment(new DashboardFragment());
+        bnvLibrarian.setSelectedItemId(R.id.mi_librarian_dashboard);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.librarian_bottom_nav_menu, menu);
