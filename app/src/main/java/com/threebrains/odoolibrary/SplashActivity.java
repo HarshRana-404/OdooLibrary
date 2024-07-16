@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.threebrains.odoolibrary.auth.Login;
 import com.threebrains.odoolibrary.auth.Signup;
 import com.threebrains.odoolibrary.utilities.Constants;
+import com.threebrains.odoolibrary.utilities.NewRequestBackgroundService;
 
 public class SplashActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
@@ -67,6 +68,7 @@ public class SplashActivity extends AppCompatActivity {
                                             startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                             finish();
                                         }else if (role.equals("Librarian")) {
+                                            startService(new Intent(getApplicationContext(), NewRequestBackgroundService.class));
                                             startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
                                             finish();
                                         }else if (role.equals("Admin")){
