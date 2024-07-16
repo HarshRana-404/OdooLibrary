@@ -170,8 +170,8 @@ public class Login extends AppCompatActivity {
                 }
             }).addOnFailureListener(e -> {
                 MprogressDialog.dismiss();
-                //Telling user that  login Failed..
-                Toast.makeText(Login.this, "Login Failed:" + e, Toast.LENGTH_SHORT).show();
+                //Telling user that login Failed..
+                Toast.makeText(Login.this, "Invalid credentials!", Toast.LENGTH_SHORT).show();
             });
         } catch (Exception e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
