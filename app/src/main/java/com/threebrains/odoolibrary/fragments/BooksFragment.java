@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -44,8 +47,10 @@ public class BooksFragment extends Fragment {
 
     FirebaseFirestore fbStore;
     HashMap<String, String> hmRequests = new HashMap<>();
-    ArrayList<BookModel> alBook;
+    ArrayList<BookModel> alBook = new ArrayList<>();
+    ArrayList<BookModel> alSearchBook = new ArrayList<>();
     ArrayList<RequestedModel> alRequests = new ArrayList<>();
+    EditText etSearchBook;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +65,14 @@ public class BooksFragment extends Fragment {
 
         rvBooks = fragBooks.findViewById(R.id.rv_books);
         fabAddBook = fragBooks.findViewById(R.id.fab_add_book);
+        etSearchBook = fragBooks.findViewById(R.id.et_search_books);
 
         try {
+            rvBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
+            alBook = new ArrayList<>();
+            bookAdapter = new BookAdapter(requireContext(), alBook);
+            rvBooks.setAdapter(bookAdapter);
+
             fbStore = FirebaseFirestore.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             String currentDate = sdf.format(Calendar.getInstance().getTime());
@@ -72,6 +83,39 @@ public class BooksFragment extends Fragment {
             if(Constants.ROLE.equals("User")){
                 fabAddBook.setVisibility(View.GONE);
             }
+
+            etSearchBook.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void afterTextChanged(Editable s) {
+                    try{
+                        alSearchBook.clear();
+                        String search = etSearchBook.getText().toString().toLowerCase();
+                        if(search.isEmpty()){
+                            bookAdapter = new BookAdapter(requireContext(), alBook);
+                            rvBooks.setAdapter(bookAdapter);
+                            bookAdapter.notifyDataSetChanged();
+                        }else{
+                            if(!alBook.isEmpty()){
+                                for(BookModel book : alBook){
+                                    if(book.getTitle().toLowerCase().contains(search)){
+                                        alSearchBook.add(book);
+                                    }
+                                }
+                                bookAdapter = new BookAdapter(requireContext(), alSearchBook);
+                                rvBooks.setAdapter(bookAdapter);
+                                bookAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(requireContext(), e+"", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
             rvBooks.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -96,11 +140,6 @@ public class BooksFragment extends Fragment {
                     super.onScrolled(recyclerView, dx, dy);
                 }
             });
-
-            rvBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
-            alBook = new ArrayList<>();
-            bookAdapter = new BookAdapter(requireContext(), alBook);
-            rvBooks.setAdapter(bookAdapter);
 
             getAllBooks();
 
