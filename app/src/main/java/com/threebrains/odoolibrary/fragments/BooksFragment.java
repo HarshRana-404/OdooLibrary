@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +27,7 @@ import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.adapters.BookAdapter;
 import com.threebrains.odoolibrary.models.BookModel;
 import com.threebrains.odoolibrary.models.RequestedModel;
+import com.threebrains.odoolibrary.utilities.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +68,34 @@ public class BooksFragment extends Fragment {
             Calendar calDue = Calendar.getInstance();
             calDue.add(Calendar.DATE, 15);
             String dueDate = sdf.format(calDue.getTime());
+
+            if(Constants.ROLE.equals("User")){
+                fabAddBook.setVisibility(View.GONE);
+            }
+
+            rvBooks.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                        if(!Constants.ROLE.equals("User")){
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fabAddBook.setVisibility(View.VISIBLE);
+                                }
+                            }, 1000);
+                        }
+                    }else{
+                        fabAddBook.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                }
+            });
 
             rvBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
             alBook = new ArrayList<>();

@@ -65,8 +65,11 @@ public class RequestsFragment extends Fragment {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     try{
                         List<DocumentSnapshot> books = task.getResult().getDocuments();
+                        int i=0;
                         for(DocumentSnapshot book : books){
                             alRequested.add(new RequestedModel(book.getString("isbn"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
+                            alRequested.get(i).setDocId(book.getId());
+                            i++;
                         }
                         requestedAdapter.notifyDataSetChanged();
                     } catch (Exception e) {

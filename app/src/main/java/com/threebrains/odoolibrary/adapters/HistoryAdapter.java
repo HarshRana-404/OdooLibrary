@@ -38,6 +38,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.IssuedVi
     public void onBindViewHolder(@NonNull HistoryAdapter.IssuedViewHolder holder, int position) {
         try{
             RequestedModel rm = alHistory.get(position);
+            String title = rm.getTitle();
             String requestDate = rm.getRequestDate();
             String issueDate = rm.getIssueDate();
             String dueDate = rm.getDueDate();
@@ -45,6 +46,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.IssuedVi
             String status = rm.getStatus();
             String temp[] = requestDate.split("-");
             requestDate = temp[2]+"-"+temp[1]+"-"+temp[0];
+            holder.tvBookTitle.setText(title);
             holder.tvRequestDate.setText(requestDate);
             if(status.equals("pending")){
                 holder.tvIssueDate.setText("Pending");

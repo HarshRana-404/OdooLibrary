@@ -68,7 +68,7 @@ public class SplashActivity extends AppCompatActivity {
                                             startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                             finish();
                                         }else if (role.equals("Librarian")) {
-                                            startService(new Intent(getApplicationContext(), NewRequestBackgroundService.class));
+//                                            startService(new Intent(getApplicationContext(), NewRequestBackgroundService.class));
                                             startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
                                             finish();
                                         }else if (role.equals("Admin")){
@@ -77,12 +77,10 @@ public class SplashActivity extends AppCompatActivity {
                                         }
                                     }
                                 } catch (Exception e) {
-                                    Toast.makeText(SplashActivity.this, e+"", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                     } catch (Exception e) {
-                        Toast.makeText(SplashActivity.this, e+"", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     startActivity(new Intent(getApplicationContext(), Login.class));

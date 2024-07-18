@@ -23,6 +23,8 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.threebrains.odoolibrary.auth.Login;
 import com.threebrains.odoolibrary.models.BookModel;
 import com.threebrains.odoolibrary.utilities.Constants;
@@ -30,6 +32,7 @@ import com.threebrains.odoolibrary.utilities.Constants;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class BookDetailsActivity extends AppCompatActivity {
@@ -39,7 +42,8 @@ public class BookDetailsActivity extends AppCompatActivity {
     Button btnRequestBook;
 
     String username;
-    String isbn, title, desc, author, year, publisher, genre, qty;
+    String isbn, title, desc, author, year, publisher, genre;
+    int qty;
 
     FirebaseFirestore fbStore;
     String currentDate = "", dueDate = "";
@@ -62,6 +66,10 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         fbStore = FirebaseFirestore.getInstance();
 
+        if(Constants.ROLE.equals("Librarian")){
+            btnRequestBook.setVisibility(View.GONE);
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         currentDate = sdf.format(Calendar.getInstance().getTime());
         Calendar calDue = Calendar.getInstance();
@@ -82,7 +90,31 @@ public class BookDetailsActivity extends AppCompatActivity {
                 adb.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        requestBook(isbn, title);
+                        Task<QuerySnapshot> qs = fbStore.collection("requested").whereEqualTo("uid", Constants.UID).get();
+                        qs.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                List<DocumentSnapshot> books = task.getResult().getDocuments();
+                                Boolean isBookAlreadyRequested = false;
+                                for(DocumentSnapshot book : books){
+                                    if(book.getString("isbn").equals(isbn)){
+                                        if(book.getString("status").equals("pending")){
+                                            Toast.makeText(BookDetailsActivity.this, "Book already requested!", Toast.LENGTH_SHORT).show();
+                                            isBookAlreadyRequested = true;
+                                        }else if(book.getString("status").equals("approved")){
+                                            if(book.getString("returndate").equals("-")){
+                                                String temp[] = book.getString("duedate").split("-");
+                                                String dueToShow = temp[2]+"-"+temp[1]+"-"+temp[0];    Toast.makeText(BookDetailsActivity.this, "Book request is already approved, due date is "+dueToShow, Toast.LENGTH_SHORT).show();
+                                                isBookAlreadyRequested = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                if(!isBookAlreadyRequested){
+                                    requestBook(isbn, title);
+                                }
+                            }
+                        });
                     }
                 });
                 adb.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -133,6 +165,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void getBookDetails(){
         isbn = getIntent().getStringExtra("bookIsbn");
         title = getIntent().getStringExtra("bookTitle");
@@ -141,14 +174,14 @@ public class BookDetailsActivity extends AppCompatActivity {
         year = getIntent().getStringExtra("bookYear");
         publisher = getIntent().getStringExtra("bookPublisher");
         genre = getIntent().getStringExtra("bookGenre");
+        qty = (getIntent().getIntExtra("bookQuantity", 0));
 
-        if (getIntent().getIntExtra("bookQuantity", 0) == 0){
-            qty = "Not Available";
-            tvBookQuantity.setText(qty);
+        if (qty == 0){
+            tvBookQuantity.setText("Not Available");
             tvBookQuantity.setTextColor(getResources().getColor(R.color.red));
             btnRequestBook.setEnabled(false);
         }else {
-            qty = (getIntent().getIntExtra("bookQuantity", 0) + " Available");
+            tvBookQuantity.setText(qty + " Available");
             tvBookQuantity.setTextColor(getResources().getColor(R.color.green));
             btnRequestBook.setEnabled(true);
         }

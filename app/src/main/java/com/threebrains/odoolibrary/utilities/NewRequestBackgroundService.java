@@ -56,7 +56,9 @@ public class NewRequestBackgroundService extends Service {
                 List<DocumentChange> dcs  = value.getDocumentChanges();
                 for(DocumentChange dc : dcs){
                    DocumentSnapshot ds = dc.getDocument();
-                   generateNotification("New book request · "+ds.getString("title"), ds.getString("username"));
+                   if(ds.getString("status").equals("pending")){
+                       generateNotification("New book request · "+ds.getString("title"), ds.getString("username"));
+                   }
                 }
             }
         });

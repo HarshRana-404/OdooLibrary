@@ -24,6 +24,7 @@ import com.threebrains.odoolibrary.AdminActivity;
 import com.threebrains.odoolibrary.LibrarianActivity;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.UserActivity;
+import com.threebrains.odoolibrary.utilities.Constants;
 
 import java.util.Objects;
 
@@ -56,22 +57,6 @@ public class Login extends AppCompatActivity {
         MprogressDialog.setCancelable(false);
         MprogressDialog.setTitle("Login");
         MprogressDialog.setMessage("Please wait...");
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                PasswordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,11 +88,8 @@ public class Login extends AppCompatActivity {
                     hidePasswordTint();
                     return;
                 }
-
                 loginUser(email, password);
                 MprogressDialog.show();
-
-
             }
         });
 
@@ -185,7 +167,9 @@ public class Login extends AppCompatActivity {
             DocumentReference df = db.collection("users").document(uid);
             df.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
+                    Constants.UID = mAuth.getCurrentUser().getUid();
                     String role = documentSnapshot.getString("role");
+                    Constants.ROLE = role;
                     Log.d("FirestoreData", "role: " + role);
                     assert role != null;
                     if (role.equals("User")) {
