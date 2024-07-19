@@ -2,9 +2,11 @@ package com.threebrains.odoolibrary.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +32,15 @@ import com.threebrains.odoolibrary.AddBookActivity;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.adapters.BookAdapter;
 import com.threebrains.odoolibrary.models.BookModel;
+import com.threebrains.odoolibrary.models.LastSixMonthIssueModel;
 import com.threebrains.odoolibrary.models.RequestedModel;
 import com.threebrains.odoolibrary.utilities.Constants;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -57,6 +63,7 @@ public class BooksFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -210,4 +217,79 @@ public class BooksFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<LastSixMonthIssueModel> getLastSixMonthsIssueCount(){
+        ArrayList<LastSixMonthIssueModel> alLastSixMonths = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String currentDate = sdf.format(Calendar.getInstance().getTime());
+        String temp[] = currentDate.split("-");
+        int currentYear = Integer.parseInt(temp[0]);
+
+        String localDate = currentDate;
+        LocalDate ld = LocalDate.parse(localDate);
+        ld = ld.minusMonths(6);
+        int startYear = ld.getYear();
+        int startMonth = ld.getMonthValue()+1;
+        String yrMn[] = new String[6];
+        int issueCount[] = new int[6];
+        issueCount[0] = 0;
+        issueCount[1] = 0;
+        issueCount[2] = 0;
+        issueCount[3] = 0;
+        issueCount[4] = 0;
+        issueCount[5] = 0;
+
+        if(startYear == currentYear){
+            for (int i=0;i<6;i++){
+                if(startMonth<=9){
+                    yrMn[i] = startYear+"-0"+startMonth;
+                }else{
+                    yrMn[i] = startYear+"-"+startMonth;
+                }
+                startMonth++;
+            }
+        }else{
+            for (int i=0;i<6;i++){
+                if(startMonth<=12){
+                    if(startMonth<=9){
+                        yrMn[i] = startYear+"-0"+startMonth;
+                    }else{
+                        yrMn[i] = startYear+"-"+startMonth;
+                    }
+                    startMonth++;
+                }else{
+                    startMonth = 1;
+                    startYear = currentYear;
+                    yrMn[i] = startYear + "-0" + startMonth;
+                    startMonth++;
+                }
+            }
+        }
+        ArrayList<String> alYrMn = new ArrayList<>();
+        Task<QuerySnapshot> qs = fbStore.collection("requested").get();
+        qs.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                try{
+                    List<DocumentSnapshot> requests = task.getResult().getDocuments();
+                    for(DocumentSnapshot request : requests){
+                        alYrMn.add(request.getString("issuedate"));
+                    }
+                    Collections.sort(alYrMn);
+                    for(String yearMonth: alYrMn){
+                        for(int i=0;i<6;i++){
+                            if(yearMonth.contains(yrMn[i])){
+                                issueCount[i]++;
+                            }
+                        }
+                    }
+                    for(int i=0;i<6;i++){
+                        alLastSixMonths.add(new LastSixMonthIssueModel(yrMn[i], issueCount[i]));
+                    }
+                } catch (Exception e) {
+                }
+            }
+        });
+        return alLastSixMonths;
+    }
 }
