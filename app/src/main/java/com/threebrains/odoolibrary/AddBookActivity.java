@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.threebrains.odoolibrary.databinding.ActivityAddBookBinding;
 
 import java.text.SimpleDateFormat;
@@ -57,7 +58,21 @@ public class AddBookActivity extends AppCompatActivity {
                 year = binding.etBookYear.getText().toString().trim();
                 qty = binding.etBookQuantity.getText().toString().trim();
 
-                addNewBook();
+                if(!isbn.isEmpty() && !title.isEmpty() && !desc.isEmpty() && !author.isEmpty() && !publisher.isEmpty() && !genre.isEmpty() && !year.isEmpty() && !qty.isEmpty()){
+                    Task<QuerySnapshot> qs = fbStore.collection("books").whereEqualTo("isbn".toLowerCase(), isbn.toLowerCase()).get();
+                    qs.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.getResult().getDocuments().isEmpty()){
+                                addNewBook();
+                            }else{
+                                Toast.makeText(AddBookActivity.this, "Book with given ISBN already exists!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }else{
+                    Toast.makeText(AddBookActivity.this, "Provide all book details!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

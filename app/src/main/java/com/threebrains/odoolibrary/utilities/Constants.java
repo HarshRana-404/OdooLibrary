@@ -9,5 +9,4 @@ import java.util.Objects;
 public class Constants {
     public static String UID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     public static String  ROLE="";
-
 }

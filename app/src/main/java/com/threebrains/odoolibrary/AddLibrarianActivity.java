@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,7 +35,7 @@ public class AddLibrarianActivity extends AppCompatActivity {
     Button btnAddLibrarian;
     FirebaseFirestore db;
     FirebaseAuth mAuth;
-    FirebaseUser user;
+    FirebaseUser adminUser;
     String username, email, password, confirmPassword;
     Map<String, Object> librarian = new HashMap<>();
 
@@ -52,7 +53,7 @@ public class AddLibrarianActivity extends AppCompatActivity {
             btnAddLibrarian = findViewById(R.id.btn_add_librarian);
             db = FirebaseFirestore.getInstance();
             mAuth = FirebaseAuth.getInstance();
-            user = mAuth.getCurrentUser();
+            adminUser = mAuth.getCurrentUser();
         } catch (Exception e) {
             Toast.makeText(this, e+"", Toast.LENGTH_SHORT).show();
         }
@@ -111,27 +112,32 @@ public class AddLibrarianActivity extends AppCompatActivity {
         librarian.put("username", username);
         librarian.put("email", email);
         librarian.put("role", "Librarian");
-        db.collection("users").document()
-                .set(librarian).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isComplete()) {
-                            FirebaseAuth createUserAuth = FirebaseAuth.getInstance();
-                            createUserAuth.createUserWithEmailAndPassword(email, password);
-                            createUserAuth.signOut();
-                            Toast.makeText(AddLibrarianActivity.this, "Librarian added!", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddLibrarianActivity.this, "Cannot add librarian!", Toast.LENGTH_SHORT).show();
-                        finish();
-                        Log.w("AddLibrarianActivity", "Error adding document", e);
-                    }
-                });
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    db.collection("users").document(mAuth.getCurrentUser().getUid())
+                            .set(librarian).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isComplete()) {
+                                        mAuth.updateCurrentUser(adminUser);
+                                        Toast.makeText(AddLibrarianActivity.this, "Librarian added!", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(AddLibrarianActivity.this, "Cannot add librarian!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                    Log.w("AddLibrarianActivity", "Error adding document", e);
+                                }
+                            });
+                }
+            }
+        });
 
     }
 }

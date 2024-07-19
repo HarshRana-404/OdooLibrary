@@ -22,6 +22,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.threebrains.odoolibrary.auth.Login;
 import com.threebrains.odoolibrary.auth.Signup;
+import com.threebrains.odoolibrary.utilities.Constants;
+import com.threebrains.odoolibrary.utilities.NewRequestBackgroundService;
 
 public class SplashActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
@@ -53,27 +55,32 @@ public class SplashActivity extends AppCompatActivity {
                 if(fAuth.getCurrentUser()!=null){
                     try{
                         String uid = (fAuth.getCurrentUser()).getUid();
+                        Constants.UID = uid;
                         DocumentReference dRef = db.collection("users").document(uid);
                         dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if(task.isComplete()){
-                                    String role = task.getResult().getString("role");
-                                    if (role.equals("User")) {
-                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                                        finish();
-                                    } else if (role.equals("Librarian")) {
-                                        startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
-                                        finish();
-                                    }else if (role.equals("Admin")){
-                                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
-                                        finish();
+                                try{
+                                    if(task.isComplete()){
+                                        String role = task.getResult().getString("role");
+                                        Constants.ROLE = role;
+                                        if(role.equals("User")) {
+                                            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                            finish();
+                                        }else if (role.equals("Librarian")) {
+//                                            startService(new Intent(getApplicationContext(), NewRequestBackgroundService.class));
+                                            startActivity(new Intent(getApplicationContext(), LibrarianActivity.class));
+                                            finish();
+                                        }else if (role.equals("Admin")){
+                                            startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+                                            finish();
+                                        }
                                     }
+                                } catch (Exception e) {
                                 }
                             }
                         });
                     } catch (Exception e) {
-                        Toast.makeText(SplashActivity.this, e+"", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     startActivity(new Intent(getApplicationContext(), Login.class));
