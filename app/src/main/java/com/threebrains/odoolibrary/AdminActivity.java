@@ -23,6 +23,7 @@ import com.threebrains.odoolibrary.fragments.DashboardFragment;
 import com.threebrains.odoolibrary.fragments.IssuedFragment;
 import com.threebrains.odoolibrary.fragments.LibrariansFragment;
 import com.threebrains.odoolibrary.fragments.ProfileFragment;
+import com.threebrains.odoolibrary.fragments.RequestsFragment;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -80,6 +81,22 @@ public class AdminActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fl_admin, fragment);
+        ft.commit();
+    }
+    public void setFromFragment(int i){
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (i == 0){
+            ft.replace(R.id.fl_admin, new BooksFragment());
+            bnvAdmin.setSelectedItemId(R.id.mi_admin_books);
+        }else if(i == 1){
+            ft.replace(R.id.fl_admin, new BooksFragment());
+            bnvAdmin.setSelectedItemId(R.id.mi_admin_books);
+        }else if (i == 2){
+            ft.replace(R.id.fl_admin, new IssuedFragment());
+            bnvAdmin.setSelectedItemId(R.id.mi_admin_issued);
+        }
+
         ft.commit();
     }
 }

@@ -8,7 +8,6 @@
     android:background="@color/lighter">
 
     <include layout="@layout/layout_profile"
-        android:id="@+id/profile"
-        />
+        android:id="@+id/profile" />
 
 </LinearLayout>

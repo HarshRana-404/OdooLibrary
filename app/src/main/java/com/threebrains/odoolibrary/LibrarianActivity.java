@@ -82,4 +82,24 @@ public class LibrarianActivity extends AppCompatActivity {
         ft.replace(R.id.fl_librarian, fragment);
         ft.commit();
     }
+
+    public void setFromFragment(int i){
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (i == 0){
+            ft.replace(R.id.fl_librarian, new BooksFragment());
+            bnvLibrarian.setSelectedItemId(R.id.mi_librarian_books);
+        }else if(i == 1){
+            ft.replace(R.id.fl_librarian, new BooksFragment());
+            bnvLibrarian.setSelectedItemId(R.id.mi_librarian_books);
+        }else if (i == 2){
+            ft.replace(R.id.fl_librarian, new IssuedFragment());
+            bnvLibrarian.setSelectedItemId(R.id.mi_librarian_issued);
+        }else {
+            ft.replace(R.id.fl_librarian, new RequestsFragment());
+            bnvLibrarian.setSelectedItemId(R.id.mi_librarian_requests);
+        }
+
+        ft.commit();
+    }
 }

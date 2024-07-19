@@ -149,6 +149,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             btnRequestBook.setEnabled(false);
         }else {
             qty = (getIntent().getIntExtra("bookQuantity", 0) + " Available");
+            tvBookQuantity.setText(qty);
             tvBookQuantity.setTextColor(getResources().getColor(R.color.green));
             btnRequestBook.setEnabled(true);
         }
