@@ -208,7 +208,7 @@ public class DashboardFragment extends Fragment {
             AdminActivity activity = (AdminActivity) getActivity();
             activity.setFromFragment(i);
         }else if(Constants.ROLE.equals("Librarian")){
-            LibrarianActivity activity = new LibrarianActivity();
+            LibrarianActivity activity = (LibrarianActivity) getActivity();
             activity.setFromFragment(i);
         }
     }
