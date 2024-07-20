@@ -93,13 +93,13 @@ A comprehensive Library Management System that allows users to manage book inven
 
 ## Technologies Used
 - **Android SDK**
+- **XML**
 - **Java**
 - **Firebase Authentication**
 - **Firebase Firestore**
+- **Firebase Storage**
 - **Material Design Components**
 
-## Demo
-- Video 
 
 ## Repository
 -https://github.com/HarshRana-404/OdooLibrary.git
