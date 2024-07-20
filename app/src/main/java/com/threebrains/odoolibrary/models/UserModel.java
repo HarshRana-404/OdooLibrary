@@ -1,7 +1,5 @@
 package com.threebrains.odoolibrary.models;
 
-import androidx.annotation.Nullable;
-
 public class UserModel {
     String email;
     String role;

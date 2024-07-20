@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.threebrains.odoolibrary.R;
-import com.threebrains.odoolibrary.models.RequestedModel;
 import com.threebrains.odoolibrary.models.UserModel;
 
 import java.util.ArrayList;
