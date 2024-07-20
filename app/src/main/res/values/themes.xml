@@ -1,9 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.OdooLibrary" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="android:statusBarColor">@color/lighter</item>
+        <item name="android:navigationBarColor">@color/bottom_navigation_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+         <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryContainer">@color/primary_transparent</item>
+        <item name="colorSecondaryContainer">@color/primary_transparent</item>
     </style>
 
     <style name="Theme.OdooLibrary" parent="Base.Theme.OdooLibrary" />
+
+    <style name="RoundedImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">6dp</item>
+    </style>
+
+    <style name="ProgressDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="colorAccent">@color/primary</item>
+    </style>
 </resources>
