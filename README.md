@@ -16,11 +16,6 @@ A comprehensive Library Management System that allows users to manage book inven
 <img src="https://github.com/user-attachments/assets/a6859595-d76c-4dc4-87a0-0859a29ba369" width="214" height="464" />  &emsp; &ensp;
 <img src="https://github.com/user-attachments/assets/3cd24757-6cd6-49a9-b66c-d32ce978b3d3" width="214" height="464" />  &emsp; &ensp;
 
-<img src="https://github.com/JigneshRathod31/qz/assets/95960973/05fde817-2c32-4cbe-aa04-a1c24655d8e6" width="214" height="464" />  &emsp; &ensp;
-<img src="https://github.com/JigneshRathod31/qz/assets/95960973/48147226-3bc8-43c4-9b06-98ab8e87b0ee" width="214" height="464" />  &emsp; &ensp;
-<img src="https://github.com/JigneshRathod31/qz/assets/95960973/62da8e30-2c3c-428b-ada8-a270c026c0dd" width="214" height="464" />  &emsp; &ensp;
-<img src="https://github.com/JigneshRathod31/qz/assets/95960973/e1b71c06-ab48-4ce7-a411-429e7fb7caff" width="214" height="464" />
-
 ## Features
 
 ### User Management
