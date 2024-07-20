@@ -5,22 +5,28 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.auth.Login;
 import com.threebrains.odoolibrary.models.RequestedModel;
@@ -39,10 +45,16 @@ public class RequestedAdapter extends RecyclerView.Adapter<RequestedAdapter.Issu
     int quantity=0, issueCount=0;
     String booksDocId;
 
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
+
     public RequestedAdapter(Context context, ArrayList<RequestedModel> alRequested){
         this.context = context;
         this.alRequested = alRequested;
+
         fbStore = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
     }
 
     @NonNull
@@ -61,6 +73,22 @@ public class RequestedAdapter extends RecyclerView.Adapter<RequestedAdapter.Issu
             holder.tvIssueDate.setText(requestedModel.getIssueDate());
             holder.tvReturnDate.setText(requestedModel.getReturnDate());
             String requestedDocId = requestedModel.getDocId();
+
+            holder.progressBar.setVisibility(View.VISIBLE);
+
+            storageReference.child(requestedModel.getBookCoverUrl()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide
+                        .with(context)
+                        .load(uri)
+                        .centerCrop()
+                        .into(holder.sivBookImg);
+
+                    holder.progressBar.setVisibility(View.GONE);
+                }
+            });
+
             holder.btnApprove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -141,10 +169,17 @@ public class RequestedAdapter extends RecyclerView.Adapter<RequestedAdapter.Issu
     }
 
     public class IssuedViewHolder extends RecyclerView.ViewHolder {
+
+        ShapeableImageView sivBookImg;
+        ProgressBar progressBar;
         TextView tvBookTitle, tvUsername, tvIssueDate, tvReturnDate;
         Button btnApprove;
+
         public IssuedViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            progressBar = itemView.findViewById(R.id.progress_bar);
+            sivBookImg = itemView.findViewById(R.id.siv_book_img);
             tvBookTitle = itemView.findViewById(R.id.tv_book_title);
             tvUsername = itemView.findViewById(R.id.tv_user_name);
             tvIssueDate = itemView.findViewById(R.id.tv_issued_date);

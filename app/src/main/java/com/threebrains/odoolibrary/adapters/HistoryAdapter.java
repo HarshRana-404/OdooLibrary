@@ -3,14 +3,21 @@ package com.threebrains.odoolibrary.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.models.RequestedModel;
 
@@ -21,9 +28,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.IssuedVi
     ArrayList<RequestedModel> alHistory;
     Context context;
 
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
+
     public HistoryAdapter(Context context, ArrayList<RequestedModel> alHistory){
         this.context = context;
         this.alHistory = alHistory;
+
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
     }
 
     @NonNull
@@ -37,6 +50,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.IssuedVi
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.IssuedViewHolder holder, int position) {
         try{
+            holder.progressBar.setVisibility(View.VISIBLE);
             RequestedModel rm = alHistory.get(position);
             String title = rm.getTitle();
             String requestDate = rm.getRequestDate();
@@ -48,6 +62,20 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.IssuedVi
             requestDate = temp[2]+"-"+temp[1]+"-"+temp[0];
             holder.tvBookTitle.setText(title);
             holder.tvRequestDate.setText(requestDate);
+
+            storageReference.child(rm.getBookCoverUrl()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide
+                        .with(context)
+                        .load(uri)
+                        .centerCrop()
+                        .into(holder.sivBookImg);
+
+                    holder.progressBar.setVisibility(View.GONE);
+                }
+            });
+
             if(status.equals("pending")){
                 holder.tvIssueDate.setText("Pending");
                 Drawable drawablePending = context.getDrawable(R.drawable.ic_history);
@@ -87,9 +115,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.IssuedVi
     }
 
     public class IssuedViewHolder extends RecyclerView.ViewHolder {
+
+        ProgressBar progressBar;
+        ShapeableImageView sivBookImg;
         TextView tvBookTitle, tvRequestDate, tvIssueDate, tvDueReturn, tvDueReturnDate;
+
         public IssuedViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            progressBar = itemView.findViewById(R.id.progress_bar);
+            sivBookImg = itemView.findViewById(R.id.siv_book_img);
             tvBookTitle = itemView.findViewById(R.id.tv_book_title);
             tvRequestDate = itemView.findViewById(R.id.tv_request_date);
             tvIssueDate = itemView.findViewById(R.id.tv_issued_date);

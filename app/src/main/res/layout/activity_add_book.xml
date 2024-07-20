@@ -19,11 +19,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="Book Details"
             android:textColor="@color/primary"
             android:textSize="24dp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_book_img"
+            android:layout_width="160dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="80dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_add"
+            app:tint="@color/primary"
+            android:background="@drawable/add_img_bg"
+            app:shapeAppearanceOverlay="@style/RoundedImage"
+            android:scaleType="centerCrop" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -144,13 +158,29 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_add_book"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Add Book"
-            android:textColor="@color/white" />
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btn_add_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Book"
+                android:textColor="@color/white" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/primary" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

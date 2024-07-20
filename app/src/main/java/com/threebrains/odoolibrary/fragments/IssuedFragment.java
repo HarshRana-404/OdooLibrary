@@ -69,7 +69,7 @@ public class IssuedFragment extends Fragment {
                         List<DocumentSnapshot> books = task.getResult().getDocuments();
                         int i=0;
                         for(DocumentSnapshot book : books){
-                            alIssued.add(new RequestedModel(book.getString("isbn"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
+                            alIssued.add(new RequestedModel(book.getString("isbn"), book.getString("bookcoverurl"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
                             alIssued.get(i).setDocId(book.getId());
                             i++;
                         }

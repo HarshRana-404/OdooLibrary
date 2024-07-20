@@ -66,7 +66,7 @@ public class HistoryFragment extends Fragment {
                     try{
                         List<DocumentSnapshot> books = task.getResult().getDocuments();
                         for(DocumentSnapshot book : books){
-                            alHistory.add(new RequestedModel(book.getString("isbn"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
+                            alHistory.add(new RequestedModel(book.getString("isbn"), book.getString("bookcoverurl"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
                         }
                         historyAdapter.notifyDataSetChanged();
                     } catch (Exception e) {

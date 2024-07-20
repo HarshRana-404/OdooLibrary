@@ -176,6 +176,7 @@ public class BooksFragment extends Fragment {
         hmRequests.put("status", status);
         fbStore.collection("requested").document().set(hmRequests);
     }
+
     public void getAllRequests(){
         try{
             Task<QuerySnapshot> qs = fbStore.collection("requested").get();
@@ -185,7 +186,7 @@ public class BooksFragment extends Fragment {
                     try{
                         List<DocumentSnapshot> books = task.getResult().getDocuments();
                         for(DocumentSnapshot book : books){
-                            alRequests.add(new RequestedModel(book.getString("isbn"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
+                            alRequests.add(new RequestedModel(book.getString("isbn"), book.getString("bookcoverurl"), book.getString("title"), book.getString("uid"), book.getString("username"), book.getString("requestdate"), book.getString("issuedate"), book.getString("duedate"), book.getString("returndate"), book.getString("status")));
                         }
                         Toast.makeText(requireContext(), alRequests.size()+"", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
@@ -206,7 +207,7 @@ public class BooksFragment extends Fragment {
                     try{
                         List<DocumentSnapshot> books = task.getResult().getDocuments();
                         for(DocumentSnapshot book : books){
-                            alBook.add(new BookModel(book.getString("isbn"), book.getString("title"), book.getString("description"), book.getString("author"), book.getString("publisher"), book.getString("year"), book.getString("genre"), Integer.parseInt(book.getString("quantity")), Integer.parseInt(book.getString("issuecount")), book.getString("dateadded")));
+                            alBook.add(new BookModel(book.getString("bookcoverurl"), book.getString("isbn"), book.getString("title"), book.getString("description"), book.getString("author"), book.getString("publisher"), book.getString("year"), book.getString("genre"), Integer.parseInt(book.getString("quantity")), Integer.parseInt(book.getString("issuecount")), book.getString("dateadded")));
                         }
                         bookAdapter.notifyDataSetChanged();
                     } catch (Exception e) {

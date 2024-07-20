@@ -112,6 +112,7 @@ public class AddLibrarianActivity extends AppCompatActivity {
         librarian.put("username", username);
         librarian.put("email", email);
         librarian.put("role", "Librarian");
+        librarian.put("pictureurl", "");
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

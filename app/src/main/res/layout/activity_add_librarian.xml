@@ -11,6 +11,14 @@
     tools:context=".AddLibrarianActivity"
     android:background="@color/lighter">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Librarian"
+        android:textColor="@color/primary"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

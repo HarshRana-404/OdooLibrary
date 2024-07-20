@@ -38,8 +38,6 @@
 
     </RelativeLayout>
 
-
-
     <LinearLayout
         android:id="@+id/ll_user_name"
         android:layout_width="match_parent"

@@ -4,22 +4,28 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.models.RequestedModel;
 
@@ -37,10 +43,16 @@ public class IssuedAdapter extends RecyclerView.Adapter<IssuedAdapter.IssuedView
     int quantity=0;
     String booksDocId = "";
 
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
+
     public IssuedAdapter(Context context, ArrayList<RequestedModel> alIssued){
         this.context = context;
         this.alIssued = alIssued;
+
         fbStore = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
     }
 
     @NonNull
@@ -59,6 +71,21 @@ public class IssuedAdapter extends RecyclerView.Adapter<IssuedAdapter.IssuedView
             String dueDate = rm.getDueDate();
             String returnDate = rm.getReturnDate();
             String returnDocId = rm.getDocId();
+
+            holder.progressBar.setVisibility(View.VISIBLE);
+
+            storageReference.child(rm.getBookCoverUrl()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide
+                        .with(context)
+                        .load(uri)
+                        .centerCrop()
+                        .into(holder.sivBookImg);
+
+                    holder.progressBar.setVisibility(View.GONE);
+                }
+            });
 
             String temp[] = rm.getIssueDate().split("-");
             issueDate = temp[2]+"-"+temp[1]+"-"+temp[0];
@@ -115,7 +142,7 @@ public class IssuedAdapter extends RecyclerView.Adapter<IssuedAdapter.IssuedView
                                                         @Override
                                                         public void onSuccess(Void unused) {
                                                             Toast.makeText(context, "Book returned!", Toast.LENGTH_SHORT).show();
-                                                            alIssued.set(position, new RequestedModel(rm.getIsbn(),rm.getTitle(),rm.getUid(), rm.getUserName(), rm.getRequestDate(), rm.getIssueDate(), rm.getIssueDate(), currentDateToShow, rm.getStatus()));
+                                                            alIssued.set(position, new RequestedModel(rm.getIsbn(), rm.getBookCoverUrl(),rm.getTitle(),rm.getUid(), rm.getUserName(), rm.getRequestDate(), rm.getIssueDate(), rm.getIssueDate(), currentDateToShow, rm.getStatus()));
                                                             holder.tvReturnDate.setTextColor(context.getColor(R.color.green));
                                                             notifyDataSetChanged();
                                                         }
@@ -148,10 +175,18 @@ public class IssuedAdapter extends RecyclerView.Adapter<IssuedAdapter.IssuedView
     }
 
     public class IssuedViewHolder extends RecyclerView.ViewHolder {
+
+        ShapeableImageView sivBookImg;
+        ProgressBar progressBar;
         TextView tvBookTitle, tvUsername, tvIssueDate, tvReturnDate, tvDueDate;
         Button btnReturned;
+
         public IssuedViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            progressBar = itemView.findViewById(R.id.progress_bar);
+            sivBookImg = itemView.findViewById(R.id.siv_book_img);
+
             tvBookTitle = itemView.findViewById(R.id.tv_book_title);
             tvUsername = itemView.findViewById(R.id.tv_user_name);
             tvIssueDate = itemView.findViewById(R.id.tv_issued_date);

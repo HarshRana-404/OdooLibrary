@@ -2,6 +2,7 @@ package com.threebrains.odoolibrary.models;
 
 public class RequestedModel {
     String  isbn;
+    String bookCoverUrl;
     String title;
     String uid;
     String userName;
@@ -11,8 +12,9 @@ public class RequestedModel {
     String returnDate;
     String status;
     String docId;
-    public RequestedModel(String isbn, String title, String uid, String userName, String requestDate, String issueDate, String dueDate, String returnDate, String status){
+    public RequestedModel(String isbn, String bookCoverUrl, String title, String uid, String userName, String requestDate, String issueDate, String dueDate, String returnDate, String status){
         this.isbn = isbn;
+        this.bookCoverUrl = bookCoverUrl;
         this.title = title;
         this.uid = uid;
         this.userName = userName;
@@ -25,6 +27,10 @@ public class RequestedModel {
 
     public String getIsbn() {
         return isbn;
+    }
+
+    public String getBookCoverUrl() {
+        return bookCoverUrl;
     }
 
     public String getTitle() {
@@ -58,9 +64,11 @@ public class RequestedModel {
     public String getStatus() {
         return status;
     }
+
     public void setDocId(String docId){
         this.docId = docId;
     }
+
     public String getDocId() {
         return docId;
     }

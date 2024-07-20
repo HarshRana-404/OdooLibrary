@@ -170,10 +170,10 @@ public class DashboardFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     for (DocumentSnapshot document: task.getResult()){
-                        issuedBooks += document.getString("returndate").equals("-")? 1 : 0;
                         pendingRequests += document.getString("status").equals("pending")? 1 : 0;
 
                         if (document.getString("status").equals("approved")){
+                            issuedBooks += document.getString("returndate").equals("-")? 1 : 0;
                             String[] issueDate = document.getString("issuedate").split("-");
 
                             int year = Integer.parseInt(issueDate[0]);
@@ -198,7 +198,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void calcTotalBooks(){
-        totalBooks = (issuedBooks + availableBooks) - pendingRequests;
+        totalBooks = issuedBooks + availableBooks;
 
         tvTotalBooks.setText(String.valueOf(totalBooks));
     }

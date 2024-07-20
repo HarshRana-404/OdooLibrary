@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.threebrains.odoolibrary.auth.Login;
 import com.threebrains.odoolibrary.models.BookModel;
 import com.threebrains.odoolibrary.utilities.Constants;
@@ -42,10 +47,13 @@ public class BookDetailsActivity extends AppCompatActivity {
     Button btnRequestBook;
 
     String username;
-    String isbn, title, desc, author, year, publisher, genre;
+    String isbn, bookCoverUrl, title, desc, author, year, publisher, genre;
     int qty;
 
     FirebaseFirestore fbStore;
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
+
     String currentDate = "", dueDate = "";
 
     @SuppressLint("MissingInflatedId")
@@ -65,6 +73,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         btnRequestBook = findViewById(R.id.btn_request_book);
 
         fbStore = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
 
         if(Constants.ROLE.equals("Librarian")){
             btnRequestBook.setVisibility(View.GONE);
@@ -132,6 +142,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     public void requestBook(String isbn, String title){
         HashMap<String, String> hmRequests = new HashMap<>();
         hmRequests.put("isbn", isbn);
+        hmRequests.put("bookcoverurl", bookCoverUrl);
         hmRequests.put("title", title);
         hmRequests.put("uid", Constants.UID);
         hmRequests.put("username", username);
@@ -168,6 +179,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void getBookDetails(){
         isbn = getIntent().getStringExtra("bookIsbn");
+        bookCoverUrl = getIntent().getStringExtra("bookCoverUrl");
         title = getIntent().getStringExtra("bookTitle");
         desc = getIntent().getStringExtra("bookDescription");
         author = getIntent().getStringExtra("bookAuthor");
@@ -185,6 +197,17 @@ public class BookDetailsActivity extends AppCompatActivity {
             tvBookQuantity.setTextColor(getResources().getColor(R.color.green));
             btnRequestBook.setEnabled(true);
         }
+
+        storageReference.child(bookCoverUrl).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide
+                    .with(getApplicationContext())
+                    .load(uri)
+                    .centerCrop()
+                    .into(sivBookImage);
+            }
+        });
 
         tvBookTitle.setText(title);
         tvBookDescription.setText(desc);

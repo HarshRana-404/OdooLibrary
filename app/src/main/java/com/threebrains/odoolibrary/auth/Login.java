@@ -57,6 +57,8 @@ public class Login extends AppCompatActivity {
         MprogressDialog.setCancelable(false);
         MprogressDialog.setTitle("Login");
         MprogressDialog.setMessage("Please wait...");
+        MprogressDialog.setProgressStyle(R.style.ProgressDialogStyle);
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

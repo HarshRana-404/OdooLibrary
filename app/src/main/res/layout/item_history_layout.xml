@@ -77,14 +77,27 @@
 
         </LinearLayout>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/siv_book_img"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_launcher_background"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/RoundedImage" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_book_img"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/rounded_transparent_bg"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminateTint="@color/primary" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

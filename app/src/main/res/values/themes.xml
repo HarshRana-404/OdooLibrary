@@ -17,4 +17,8 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">6dp</item>
     </style>
+
+    <style name="ProgressDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="colorAccent">@color/primary</item>
+    </style>
 </resources>

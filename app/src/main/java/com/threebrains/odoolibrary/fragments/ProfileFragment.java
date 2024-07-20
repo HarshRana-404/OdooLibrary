@@ -21,8 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseApp;
@@ -36,6 +38,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.threebrains.odoolibrary.R;
 import com.threebrains.odoolibrary.auth.Login;
+import com.threebrains.odoolibrary.utilities.Constants;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,7 +67,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View fragProfile = inflater.inflate(R.layout.layout_profile, container, false);
+        View fragProfile = inflater.inflate(R.layout.fragment_profile, container, false);
 
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -94,7 +99,7 @@ public class ProfileFragment extends Fragment {
 
                 AlertDialog.Builder adb = new AlertDialog.Builder(requireContext());
                 AlertDialog ad = adb.create();
-                adb.setTitle("llLogout?");
+                adb.setTitle("Logout?");
                 adb.setMessage("Are you sure you want to logout?");
                 adb.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
@@ -129,6 +134,21 @@ public class ProfileFragment extends Fragment {
                     if (document.exists()) {
                         tvUserName.setText(document.getString("username"));
                         tvEmail.setText(document.getString("email"));
+
+                        String profilePictureUrl = document.getString("pictureurl");
+
+                        if (!profilePictureUrl.isEmpty()){
+                            storageReference.child(profilePictureUrl).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Glide
+                                        .with(requireContext())
+                                        .load(uri)
+                                        .centerCrop()
+                                        .into(civProfile);
+                                }
+                            });
+                        }
                     } else {
                         Toast.makeText(getActivity(), "User data not found", Toast.LENGTH_SHORT).show();
                     }
@@ -148,11 +168,10 @@ public class ProfileFragment extends Fragment {
                 if (requestCode == 1){
                     Uri selectedImgUri = data.getData();
 
-                    Toast.makeText(requireContext(), selectedImgUri + "", Toast.LENGTH_SHORT).show();
                     if (selectedImgUri != null){
                         civProfile.setImageURI(selectedImgUri);
 
-//                        uploadProfile(selectedImgUri);
+                        uploadProfile(selectedImgUri);
                     }else {
                         Toast.makeText(requireContext(), "Null Uri returned!", Toast.LENGTH_SHORT).show();
                     }
@@ -170,7 +189,16 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()){
-                    Toast.makeText(requireContext(), uri.getLastPathSegment().toString() + " uploaded successfully!", Toast.LENGTH_SHORT).show();
+                    firestore.collection("users").document(Constants.UID).update("pictureurl", "ProfilePictures/" + uri.getLastPathSegment()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                // code
+                            }else {
+                                Toast.makeText(requireContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });

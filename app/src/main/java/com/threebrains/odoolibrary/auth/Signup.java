@@ -147,6 +147,7 @@ public class Signup extends AppCompatActivity {
                             userDetails.put("username", username);
                             userDetails.put("email", email);
                             userDetails.put("role", "User");
+                            userDetails.put("pictureurl", "");
                             db.collection("users").document(user.getUid())
                                     .set(userDetails)
                                     .addOnSuccessListener(aVoid -> {

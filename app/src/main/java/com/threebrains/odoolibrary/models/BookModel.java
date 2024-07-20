@@ -1,6 +1,7 @@
 package com.threebrains.odoolibrary.models;
 
 public class BookModel {
+    String bookCoverUrl;
     String  isbn;
     String title;
     String description;
@@ -11,7 +12,8 @@ public class BookModel {
     int quantity;
     int issueCount;
     String dateAdded;
-    public BookModel(String isbn, String title, String description, String author, String publisher, String year, String genre, int quantity, int issueCount, String dateAdded){
+    public BookModel(String bookCoverUrl, String isbn, String title, String description, String author, String publisher, String year, String genre, int quantity, int issueCount, String dateAdded){
+        this.bookCoverUrl = bookCoverUrl;
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -22,6 +24,14 @@ public class BookModel {
         this.quantity = quantity;
         this.issueCount = issueCount;
         this.dateAdded = dateAdded;
+    }
+
+    public String getBookCoverUrl() {
+        return bookCoverUrl;
+    }
+
+    public void setBookCoverUrl(String bookCoverUrl) {
+        this.bookCoverUrl = bookCoverUrl;
     }
 
     public String getIsbn() {

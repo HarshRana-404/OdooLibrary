@@ -13,6 +13,7 @@
     <color name="bottom_navigation_bg">#F2F2F2</color>
 
     <color name="lighter">#EFEFEF</color>
+    <color name="lighten">#1A6D6D6D</color>
     <color name="light">#CDCDCD</color>
     <color name="gray">#6D6D6D</color>
     <color name="dark">#343434</color>
